@@ -12,6 +12,13 @@ class GameReviewCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+class GameReviewListView(generics.ListAPIView):
+    lookup_field = 'pk'
+    serializer_class = GameReviewSerializer
+    
+    def get_queryset(self):
+        return GameReview.objects.all()
+
 class GameReviewRudView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
     serializer_class = GameReviewSerializer
