@@ -1,6 +1,7 @@
 from django.db.models import Q
 from rest_framework import generics, mixins
 from reviews.models import GameReview
+from .permissions import IsOwnerOrReadOnly
 from .serializers import GameReviewSerializer
 
 class GameReviewClsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
@@ -43,6 +44,7 @@ class GameReviewListView(generics.ListAPIView):
 class GameReviewRudView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
     serializer_class = GameReviewSerializer
+    permission_classes = [IsOwnerOrReadOnly]
     
     def get_queryset(self):
         return GameReview.objects.all()
