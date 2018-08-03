@@ -24,6 +24,9 @@ class GameReviewClsAPIView(mixins.CreateModelMixin, generics.ListAPIView):
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
+    def get_serializer_context(self, *args, **kwargs):
+        return {'request': self.request}
+
 class GameReviewCreateView(generics.CreateAPIView):
     lookup_field = 'pk'
     serializer_class = GameReviewSerializer
@@ -34,12 +37,18 @@ class GameReviewCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def get_serializer_context(self, *args, **kwargs):
+        return {'request': self.request}
+
 class GameReviewListView(generics.ListAPIView):
     lookup_field = 'pk'
     serializer_class = GameReviewSerializer
     
     def get_queryset(self):
         return GameReview.objects.all()
+
+    def get_serializer_context(self, *args, **kwargs):
+        return {'request': self.request}
 
 class GameReviewRudView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
@@ -48,6 +57,9 @@ class GameReviewRudView(generics.RetrieveUpdateDestroyAPIView):
     
     def get_queryset(self):
         return GameReview.objects.all()
+
+    def get_serializer_context(self, *args, **kwargs):
+        return {'request': self.request}
 
     # def get_object(self):
     #     pk = self.kwargs.get('pk')
