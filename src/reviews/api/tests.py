@@ -107,3 +107,22 @@ class GameReviewAPITestCase(APITestCase):
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_user_login_and_update(self):
+        data = {
+            'username': 'testuser',
+            'password': 'secret',
+        }
+        url = api_reverse('api-login')
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code,
+                         status.HTTP_200_OK)
+        token = response.data.get('token')
+        if token is not None:
+            game_review = GameReview.objects.first()
+            url = game_review.get_api_url()
+            data = {'title': 'Second updated test title',
+                    'content': 'Second updated test content'}
+            self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
+            response = self.client.put(url, data, format='json')
+            self.assertEqual(response.status_code,
+                            status.HTTP_200_OK)
